@@ -1,4 +1,6 @@
+# chapter 1
 
+## chapter 1.1
 
 
 
@@ -12,7 +14,7 @@ These [concepts](concepts.html) and the following table contains abbreviations a
 
 The GDHCN Secretariat manages the on-boarding process and applications of eligible Trust Network Participants to connect as a trusted party to the trust network. Prepared on-boarding records will be handed over to the TNG operator with the request to process the technical on-boarding of the trusted party. An organizational and technical successful application results in a confirmation and the Trust Network Participant can connect to the trust network as a trusted party.
 
-<img src="OnboardingOverview.drawio.png" style="float:none; margin: 0px 0px 0px 0px;"/>
+<img src="img/OnboardingOverview.drawio.png" style="float:none; margin: 0px 0px 0px 0px;"/>
 
 Starting in September of 2023, participation will be opened to other eligible participants following the Full On-boarding Process (FOP).
 
