@@ -29,11 +29,11 @@ Each Trust Network Participant maintains one or more Signing Certificate Authori
 The Trust Network Terms of Participation are comprised of the following components:
 * ***TOP0*** Sharing of necessary credentials to establish an mTLS connection between Trust Network Participant back-ends and WHO Digital Health Trust Network infrastructure
 * ***TOP1*** Compliance with technical and interoperability standards required for a Public Key Infrastructure (PKI);
-* ***TOP2*** Standards for Verifiable Digital Health Certificates and APIs of Trusted Services; and
+* ***TOP2*** Standards for Verifiable Digital Health Certificates and APIs of Trusted Services and
 * ***TOP3*** Policy and regulatory standards that Trust Network Participants are expected to comply with pertaining to Trusted Services that a Trust Participants operates or utilizes
 
 ### Trust Lists 
-Universal verifier applications that support different credential standards are complicated by wide variability in format of the credential payloads, signatures, key formats, and key distribution methods. Public keys formats include x509 certificates, JSON Web Key Sets (JWKS), and DID documents. Signing key distribution methods include API gateways, hosted by issuer at a pre-defined URL, embedded in certificates, and by block-chain based resolution. Establishing root of trust by trust anchor or distributing trust list has been accomplished by API gateway, hosted URL, private dissemination and other bilateral sharing agreements.
+Universal verifier applications that support different credential standards are complicated by wide variability in format of the credential payloads, signatures, key formats and key distribution methods. Public keys formats include x509 certificates, JSON Web Key Sets (JWKS) and DID documents. Signing key distribution methods include API gateways, hosted by issuer at a pre-defined URL, embedded in certificates and by block-chain based resolution. Establishing root of trust by trust anchor or distributing trust list has been accomplished by API gateway, hosted URL, private dissemination and other bilateral sharing agreements.
 
 While some variability is expected in an approach that preserves sovereignty, there are opportunities for alignment in key format and distribution for the sake of fostering interoperability. With that goal, we provide a unifying trust list format to assemble and share public key infrastructure for all credential specifications used by existing trust networks. Importantly, this format does not enforce a particular policy framework for participants of the trust network.
 
@@ -53,12 +53,12 @@ A digital trust network is the set of digital infrastructure, processes and gove
 The Trust Network Custodian defines the Terms of Participation within the trust network.  The custodian is responsible for: 
 * establishing eligibility criteria for potential Trust Network Participants;  
 * establishing (and maintaining) the organizational identity of Trust Network Participants; 
-* establishing the Trust Network Terms of Participation within the trust network; and  
-* defining the on-boarding process for the Trust Network Participants to join the trust network within the established terms of participation. 
+* establishing the Trust Network Terms of Participation within the trust network  
+* defining the onboarding process for the Trust Network Participants to join the trust network within the established Terms of Participation. 
 
 
 #### Trust Network Ecosystem
-A Trust Network comprises the infrastructure, governance/policies and processes that are defined by a Trust Network Custodian and which characterize the trust relationships that Trust Network Participants have with the Trust Network Custodian and between themselves.   A core infrastructural component of a Trust Network is a Public Key Infrastructure (PKI). 
+A Trust Network comprises the infrastructure, governance/policies and processes that are defined by a Trust Network Custodian and which characterize the trust relationships that Trust Network Participants have with the Trust Network Custodian and between themselves. A core infrastructural component of a Trust Network is a Public Key Infrastructure (PKI). 
 
 
 
@@ -75,8 +75,8 @@ The TLS server public key certificate of the TNG.
 ### Trust Network Participant (TNP)
 A Trust Network Participant is a participant of a Trust Network that adheres to the Terms of Participation and manages the necessary technical infrastructure and governance processes.  Trust Network Participants are responsible for making bilateral determinations related to the utilization of Trusted Services. 
 
-#### Trust Network Participant Back-end
-A Trust Network Participant's back-end system for managing the local part of information. The implementation of Trust Network Participant's back-end is not in the scope of this document. A national back-end can be also understood as a trusted party on-boarded in the Trust Network Gateway (can be a script, a proxy or a web server as well).
+#### Trust Network Participant Backend
+A Trust Network Participant's backend system for managing the local part of information. The implementation of Trust Network Participant's backend is not in the scope of this document. A national backend can be also understood as a trusted party onboarded in the Trust Network Gateway (can be a script, a proxy or a web server as well).
 
 #### Trust Network Participant - Signing Certificate Authority  (TNP<sub>SCA) 
 The SCA public key certificate of a Trust Network Participants (could be more than one).
