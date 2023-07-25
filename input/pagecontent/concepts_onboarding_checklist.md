@@ -1,10 +1,8 @@
 ## Onboarding Checklist
 
-### Common Hints
+### General Hints
 
-This document describes the standard onboarding process (so called Future Onboarding Process - FOP.
-
-See [Certificate Governance](concepts_certificate_governance.html)
+This document describes the standard onboarding process (so called Future Onboarding Process - FOP).
 
 **Note:** In the embedded image the following relabels apply:
 * DCCG -> TNG
@@ -17,6 +15,9 @@ It is highly recommended:
 - **to use certificates issued from a public CA which follows the CAB Forum Rules**
 - **not to reuse any certificates across the different staging environments**
 
+- **See [Certificate Governance](concepts_certificate_governance.html)
+
+
 ### Links to the Environments
 
 - Development Environment (Unstable): https://tng-dev.who.int
@@ -27,6 +28,7 @@ It is highly recommended:
 ### [optional] Onboarding to the Development Environment (DEV)
 
 Onboarding to the DEV environment isn't a must and is only performed on request from the participant.
+Please follow the instructions according to the UAT onboarding process describe below.
 1) Prepare public keys in PEM format in a private Github repository dedicated to development environment keys. Follow the  procedure described in this Github repository: https://github.com/WorldHealthOrganization/tng-participant-template.
 2) After onboarding succeeded connect your development setup as described below in the next section "Onboarding to the User Acceptance Test Environment (UAT)".
 
