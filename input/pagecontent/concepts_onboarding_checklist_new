@@ -1,0 +1,197 @@
+[to assign to the cert creation task...]
+1) Certificates must be prepared for Acceptance Environment (self signed allowed) following the requirements in [Certificate Governance](concepts_certificate_governance.html)
+    - Authentication: TNP<sub>TLS</sub>
+    - Upload:   TNP<sub>UP</sub>
+    - SCA(s):  TNP<sub>SCA</sub>
+    
+ 2) Prepare public keys in PEM format in a private Github repository dedicated to acceptance environment keys. Follow the  procedure described in this Github repository: https://github.com/WorldHealthOrganization/tng-participant-template (for support contact the tng-support@who.int functional mailbox). After technical onboarding you will be notified.
+
+
+
+[24xxx] The required onboarding information 
+  - GPG keys of all confirmed persons and for all requested environments (UAT, PROD and optional DEV)
+  - the URL's of the applicant private GitHub repositories
+  - country code
+is collected and provided to the service provider.
+
+[25 - 30xxx] The onboarding data is taken over to the configuration files  by the service provider to automate the GitHub processes. As a result, a Pull Request (PR) is created. Dependent on the environment, the subsequent steps differ.
+[33xxx] For UAT (and optional DEV), an auto signing process signs the keys.
+[32 -32xxxx] For PROD envorionment, the PR is verifyed by WHO. After successfull verfifcation, the air-gapped signing process is performed to sign the keys.
+[34] The service provider checks the PR as well.
+[36 -37xxxx] In case the verification failed, WHO is informed about the outcome. 
+[38xxxx] In case the the verification was successful the whitelisting of the certificates is initiated  
+[39 - 41xxx] and the participant will be informed that the preparation has been completed successfully.
+[42xxxx] The participant is connecting to UAT environment.
+    a) After onboarding in the +User Acceptance & Test (UAT) environment, check the connectivity with the following command:<br>
+      ``` curl -v https://tng-uat.who.int/trustList --cert TLS.pem --key TLS_key.pem``` <br>
+        You should see a output like: <br>
+ 
+       ```
+      [
+      {
+          "kid": "+jrpHSqdqZY=",
+          "timestamp": "2023-05-25T07:55:21Z",
+          "country": "XC",
+          "certificateType": "UPLOAD",
+          "thumbprint": "fa3ae91d...",
+          "signature": "MIAGCSqGSIb3D...",
+          "rawData": "MIIErTCCA5WgAwIBAgII..."
+      }
+      ]
+      ```
+
+    b) Test the other trustlist routes in the same way (e. g. with DSC/SCA/Upload/Authentication...)
+    c) Create an Document Signer Certificate and sign it by the SCA
+    d) Create an CMS package with the following command: 
+    ``` 
+        openssl x509 -outform der -in cert.pem -out cert.der
+        openssl cms -sign -nodetach -in cert.der -signer signing.crt -inkey signing.key -out signed.der -outform DER -binary
+        openssl base64 -in signed.der -out cms.b64 -e -A 
+    ``` 
+     Note: cert.der is your DSC, signing.crt is the TNP<sub>UP</sub>)
+  
+    e) Upload the CMS package to the gateway<br>
+      ```curl -v -X POST -H "Content-Type: application/cms" --cert TLS.pem --key TLS_key.pem --data @cms.b64 https://tng-uat.who.int/signerCertificate``` <br>
+    f) Download the trustlist again and check if your DSC is available.
+ 
+  **Note**: Some versions of curl don't attach the client certificates automatically. This can be checked via
+  ``` curl --version ```
+  Ensure that the used version is linked to OpenSSL. Especially under Windows (https://curl.se/windows/): 
+  <br><br>
+  OpenSSL Test Example (working)<br>
+  <br>
+  {% include img.html img="OpenSSL.PNG" caption="Working Setup" width="70%" %}
+  <br><br>
+  WinSSL Test Example (Not working)
+  <br><br>
+  {% include img.html img="WinSSL.PNG" caption="Non Working Setup" width="70%" %}
+
+[44xxx] In case the connection fails, some corrective actions according to the support of the service provider has to performed to analyze and solve the issue(s).
+[45xxx] After the connection to the TNG is established the participant can start the dry run test on UAT.
+This test include the listed steps:
+  - Upload one or more DSC's to the TNG (Details: xyyy)
+  - Delete at least one DSC again
+  - Upload it again if it is required for further testing
+  - Download the trust list from gateway
+  - Provide sample DCC's to be verified by the service provider
+  - Validate some sample DCC's to ensure the the validation implementation is working fine
+[46xxx] After executing all reqired steps, the participant has to provide the test results to the service provider.
+[47xxx] The service provider checks the results 
+[50xxx] and in case of any issues additional corrective actions are bespoken and solved with the participant.
+[51xxx] After passing the Dry Run test successfully, the participant is allowed to connect to TNG PROD environment.
+[53xxx] In case the connection fails, some corrective actions according to the support of the service provider has to performed to analyze and solve the issue(s).
+[54xxx] After the connection to the TNG PROD is established the Production Readiness Test can start.
+This test include the listed steps:
+  - Upload one or more DSC's to the TNG PROD (Details: xyyy)
+  - Delete at least one DSC again
+  - Upload it again in case the DSC is required.
+[55 - 56xxx] After executing all reqired steps, the participant has to provide the test results to the service provider by mail.
+[57xxx] The service provider checks the results.
+[59xxx] and in case of any issues additional corrective actions are bespoken and solved with the participant.
+[60xxx] After passing the Production Readiness Test successfully, the participant is allowed to use the TNG PROD environment. A confirmation email is sent to the participant and to WHO with the confirmation about the successfully passed test and the completion of the onboarding process.
+
+************************************ older content follows *********************************
+
+
+## Onboarding Checklist
+
+### General Hints
+
+This document describes the standard onboarding process (so called Future Onboarding Process - FOP).
+
+**Note:** In the embedded image the following relabels apply:
+* DCCG -> TNG
+* CSCA -> SCA
+* DCC -> GDHCN
+* NB -> TNP
+
+
+It is highly recommended:
+- **to use certificates issued from a public CA which follows the CAB Forum Rules**
+- **not to reuse any certificates across the different staging environments**
+
+- **See [Certificate Governance](concepts_certificate_governance.html)
+
+
+### Links to the Environments
+
+- Development Environment (Unstable): https://tng-dev.who.int
+- Acceptance Environment: https://tng-uat.who.int
+- Production Environment: https://tng.who.int
+
+
+### [optional] Onboarding to the Development Environment (DEV)
+
+Onboarding to the DEV environment isn't a must and is only performed on request from the participant.
+Please follow the instructions according to the UAT onboarding process describe below.
+1) Prepare public keys in PEM format in a private Github repository dedicated to development environment keys. Follow the  procedure described in this Github repository: https://github.com/WorldHealthOrganization/tng-participant-template.
+2) After onboarding succeeded connect your development setup as described below in the next section "Onboarding to the User Acceptance Test Environment (UAT)".
+
+
+
+### Onboarding to the User Acceptance Test Environment (UAT) 
+
+For a successfull connection to the gateway there are several steps to prepare: 
+
+ 1) Certificates must be prepared for Acceptance Environment (self signed allowed) following the requirements in [Certificate Governance](concepts_certificate_governance.html)
+    - Authentication: TNP<sub>TLS</sub>
+    - Upload:   TNP<sub>UP</sub>
+    - SCA(s):  TNP<sub>SCA</sub>
+    
+ 2) Prepare public keys in PEM format in a private Github repository dedicated to acceptance environment keys. Follow the  procedure described in this Github repository: https://github.com/WorldHealthOrganization/tng-participant-template (for support contact the tng-support@who.int functional mailbox). After technical onboarding you will be notified.
+
+ 3) After onboarding in the +User Acceptance & Test (UAT) environment, check the connectivity with the following command:<br>
+  ``` curl -v https://tng-uat.who.int/trustList --cert TLS.pem --key TLS_key.pem``` <br>
+    You should see a output like: <br>
+ 
+    ```
+    [
+    {
+        "kid": "+jrpHSqdqZY=",
+        "timestamp": "2023-05-25T07:55:21Z",
+        "country": "XC",
+        "certificateType": "UPLOAD",
+        "thumbprint": "fa3ae91d...",
+        "signature": "MIAGCSqGSIb3D...",
+        "rawData": "MIIErTCCA5WgAwIBAgII..."
+    }
+    ]
+    ```
+
+ 4) Test the other Trustlist Routes in the same style (e. g. with DSC/SCA/Upload/Authentication...)
+ 5) Create an Document Signer Certificate and sign it by the SCA
+ 6) Create an CMS package with the following command: 
+  ``` 
+      openssl x509 -outform der -in cert.pem -out cert.der
+      openssl cms -sign -nodetach -in cert.der -signer signing.crt -inkey signing.key -out signed.der -outform DER -binary
+      openssl base64 -in signed.der -out cms.b64 -e -A 
+  ``` 
+   Note: cert.der is your DSC, signing.crt is the TNP<sub>UP</sub>)
+  
+ 7) Upload the CMS package to the gateway<br>
+    ```curl -v -X POST -H "Content-Type: application/cms" --cert TLS.pem --key TLS_key.pem --data @cms.b64 https://tng-uat.who.int/signerCertificate``` <br>
+ 8) Download the trustlist again and check if your DSC is available.
+ 
+ 
+**Note**: Some versions of curl don't attach the client certificates automatically. This can be checked via
+``` curl --version ```
+Ensure that the used version is linked to OpenSSL. Especially under Windows (https://curl.se/windows/): 
+<br><br>
+OpenSSL Test Example (working)<br>
+<br>
+{% include img.html img="OpenSSL.PNG" caption="Working Setup" width="70%" %}
+<br><br>
+WinSSL Test Example (Not working)
+<br><br>
+{% include img.html img="WinSSL.PNG" caption="Non Working Setup" width="70%" %}
+
+
+
+### Onboarding to the Production Environment (PROD)
+
+1) Prepare public keys in PEM format in a private Github repository dedicated to production environment keys. Follow the  procedure described in this Github repository: https://github.com/WorldHealthOrganization/tng-participant-template.
+2) After onboarding succeeded connect your production setup as described above.
+
+
+
+    
